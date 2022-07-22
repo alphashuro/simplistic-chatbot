@@ -16,8 +16,6 @@ pub mod buttler {
     fn text_to_command(text: &str) -> Option<Command> {
         let text = text.trim().to_lowercase();
 
-        println!("{}", text);
-
         let open = Regex::new(r"open (.+).?").unwrap();
         let close = Regex::new(r"close (.+).?").unwrap();
         let play = Regex::new(r"play (.+).?").unwrap();
@@ -62,7 +60,7 @@ pub mod buttler {
             return format!("{}! You can do it!!!", g);
         }
 
-        match text_to_command(&text) {
+        match text_to_command(&text.replace("my", "your")) {
             Some(Command::Open(item)) => format!("Opening {}...", item),
             Some(Command::Close(item)) => format!("Closing {}...", item),
             Some(Command::Play(item)) => format!("Playing {}...", item),
@@ -70,7 +68,7 @@ pub mod buttler {
             Some(Command::Switch(toggle, item)) => {
                 let next_state = if toggle { "on" } else { "off" };
                 format!("Switching {} {}...", item, next_state)
-            },
+            }
             _ => "Please ask me to open, close, play, fetch, or switch something on/off for you..."
                 .to_string(),
         }
@@ -78,14 +76,14 @@ pub mod buttler {
 }
 
 fn main() {
+    println!("Hello! I am your buttler today. You can ask me to open, close, play, fetch, or switch something on/off for you...");
+
     loop {
         print!("command: ");
         io::stdout().flush().unwrap();
 
         let mut input = String::new();
-        io::stdin()
-            .read_line(&mut input)
-            .unwrap();
+        io::stdin().read_line(&mut input).unwrap();
 
         println!("{}", respond(&input));
     }
